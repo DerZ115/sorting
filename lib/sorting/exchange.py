@@ -3,6 +3,7 @@ from collections.abc import MutableSequence
 from .base import Sort
 
 
+# noinspection DuplicatedCode
 class BubbleSort(Sort):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -39,6 +40,7 @@ class OptBubbleSort(Sort):
         return arr
 
 
+# noinspection DuplicatedCode
 class CocktailSort(Sort):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
