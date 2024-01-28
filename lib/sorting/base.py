@@ -1,11 +1,12 @@
 import gc
 import random
 import itertools
-from time import process_time_ns
+from time import perf_counter_ns
+from func_timeout import func_timeout, FunctionTimedOut
 from collections.abc import Callable, Sequence, MutableSequence
 
 
-class Sort(object):
+class Sort:
     def __init__(self, it: int = 1000,
                  repeats: int = 1,
                  max_time: int | None = None,
@@ -39,8 +40,13 @@ class Sort(object):
 
         gc.enable()
         self.last_results = results
-        self._check_sorting()
-        self.last_runtimes = [min(runtimes_tmp) for runtimes_tmp in runtimes]
+        self._check_sorting(array)
+        self.last_runtimes = []
+        for runtimes_tmp in runtimes:
+            if all([runtime is None for runtime in runtimes_tmp]):
+                self.last_runtimes.append(None)
+            else:
+                self.last_runtimes.append(min([runtime for runtime in runtimes_tmp if runtime is not None]))
 
         return self.last_runtimes
 
@@ -48,7 +54,6 @@ class Sort(object):
                    func: Callable,
                    array: MutableSequence,
                    *args, **kwargs) -> tuple[list, list]:
-        total_time = 0
         runtimes_it = []
         results_it = []
         for _ in itertools.repeat(None, self.it):
@@ -56,22 +61,32 @@ class Sort(object):
                 arr = array.copy()
             else:
                 arr = array
-            start = process_time_ns()
-            result = func(arr, *args, **kwargs)
-            runtime = process_time_ns() - start
+            try:
+                result, runtime = func_timeout(self.max_time,
+                                               self.measure_sort_time,
+                                               args=(func, arr, *args),
+                                               kwargs=kwargs)
+            except FunctionTimedOut:
+                print(f"Sorter {self.__class__.__name__} timed out")
+                result = None
+                runtime = None
             runtimes_it.append(runtime)
             results_it.append(result)
-            total_time += runtime
-
-            if self.max_time is not None and total_time >= self.max_time:
-                break
 
         return runtimes_it, results_it
 
-    def _check_sorting(self) -> None:
+    def _check_sorting(self, array) -> None:
         """Returns True if all the elements are equal to each other"""
-        sorted_array = list(range(len(self.last_results[0])))
-        is_sorted = all([result == sorted_array for result in self.last_results])
+        sorted_array = list(range(len(array)))
+        is_sorted = all([result == sorted_array or result is None for result in self.last_results])
         if not is_sorted:
             print(set(tuple(x) for x in self.last_results))
             raise ValueError("Sorting failed in at least one iteration")
+
+    @staticmethod
+    def measure_sort_time(func: Callable, array: MutableSequence, *args, **kwargs) -> tuple[Sequence, int]:
+        """Returns the time it takes to sort the array"""
+        start = perf_counter_ns()
+        result = func(array, *args, **kwargs)
+        end = perf_counter_ns()
+        return result, end - start
