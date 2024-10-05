@@ -8,13 +8,16 @@ from lib.sorting.exchange import (BinaryGnomeSort, BubbleSort, CircleSort,
                                   OptCocktailSort, OptGnomeSort)
 from lib.sorting.selection import (SelectionSort, DoubleSelectionSort,
                                    CycleSort, HeapSortMax, HeapSortMin,
-                                   HeapSortMinFlipped, WeakHeapSort, TernaryHeapSort)
-from lib.sorting.insertion import (InsertionSort)
+                                   HeapSortMinFlipped, WeakHeapSort, 
+                                   TernaryHeapSort, SmoothSort)
+from lib.sorting.insertion import (InsertionSort, BinaryInsertionSort, 
+                                   ShellSort, PatienceSort)
 from lib.sorting.quick import (QuickSortLL, QuickSortLR, QuickSortDualPivot,
                                QuickSortStable)
 from lib.sorting.merge import (TopDownMergeSort,
                                BottomUpMergeSort)
 from lib.sorting.impractical import (BogoSort)
+from lib.sorting.distribution import (CountingSort, PigeonholeSort)
 
 sort_args = {'it': 10, 'repeats': 5, 'random_state': 141, "max_time": 1}
 
@@ -37,9 +40,13 @@ selection_sorts = [SelectionSort(**sort_args),
                    HeapSortMin(**sort_args),
                    HeapSortMinFlipped(**sort_args),
                    WeakHeapSort(**sort_args),
-                   TernaryHeapSort(**sort_args)]
+                   TernaryHeapSort(**sort_args),
+                   SmoothSort(**sort_args)]
 
-insertion_sorts = [InsertionSort(**sort_args)]
+insertion_sorts = [InsertionSort(**sort_args),
+                   BinaryInsertionSort(**sort_args),
+                   ShellSort(**sort_args),
+                   PatienceSort(**sort_args)]
 
 quick_sorts = [QuickSortLL(**sort_args),
                QuickSortLR(**sort_args),
@@ -51,13 +58,17 @@ merge_sorts = [TopDownMergeSort(**sort_args),
 
 impractical_sorts = [BogoSort(**sort_args)]
 
+distribution_sorts = [CountingSort(**sort_args),
+                      PigeonholeSort(**sort_args)]
+
 all_sorts = {
-    # 'Exchange Sorts': exchange_sorts,
-    'Selection Sorts': selection_sorts,
-    # 'Insertion Sorts': insertion_sorts,
-    # 'Quick Sorts': quick_sorts,
-    # 'Merge Sorts': merge_sorts,
-    # 'Impractical Sorts': impractical_sorts
+    'ExchangeSorts': exchange_sorts,
+    'SelectionSorts': selection_sorts,
+    'InsertionSorts': insertion_sorts,
+    'QuickSorts': quick_sorts,
+    'MergeSorts': merge_sorts,
+    'ImpracticalSorts': impractical_sorts,
+    'DistributionSorts': distribution_sorts
 }
 
 array_lens = [2**x for x in range(11)]  # 1 - 1024

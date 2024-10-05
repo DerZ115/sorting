@@ -76,7 +76,6 @@ class Sort:
         return runtimes_it, results_it
 
     def _check_sorting(self, array) -> None:
-        """Returns True if all the elements are equal to each other"""
         sorted_array = list(range(len(array)))
         is_sorted = all([result == sorted_array or result is None for result in self.last_results])
         if not is_sorted:
@@ -85,7 +84,6 @@ class Sort:
 
     @staticmethod
     def measure_sort_time(func: Callable, array: MutableSequence, *args, **kwargs) -> tuple[Sequence, int]:
-        """Returns the time it takes to sort the array"""
         start = perf_counter_ns()
         result = func(array, *args, **kwargs)
         end = perf_counter_ns()
