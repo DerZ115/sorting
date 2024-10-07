@@ -39,8 +39,9 @@ app = Dash()
 app.layout = [
     html.H1(children='Sorting Algorithms', style={'textAlign':'center'}),
     dcc.Dropdown(data.sort_name.unique(), 
-                 "SelectionSort", 
-                 id='dropdown-sort'),
+                 ["SelectionSort"], 
+                 id='dropdown-sort',
+                 multi=True),
     dcc.Graph(id='graph-content')
 ]
 
@@ -49,8 +50,8 @@ app.layout = [
     Input('dropdown-sort', 'value')
 )
 def update_graph(value):
-    data_filtered = data[data.sort_name==value]
-    return px.line(data_filtered, x='n', y='time_mean')
+    data_filtered = data[data.sort_name.isin(value)]
+    return px.line(data_filtered, x='n', y='time_mean', color="sort_name")
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -19,7 +19,7 @@ from lib.sorting.merge import (TopDownMergeSort,
 from lib.sorting.impractical import (BogoSort)
 from lib.sorting.distribution import (CountingSort, PigeonholeSort)
 
-sort_args = {'it': 10, 'repeats': 5, 'random_state': 141, "max_time": 1}
+sort_args = {'it': 10, 'repeats': 5, 'random_state': 141, "max_time": 10}
 
 exchange_sorts = [BubbleSort(**sort_args),
                   OptBubbleSort(**sort_args),
@@ -71,7 +71,8 @@ all_sorts = {
     'DistributionSorts': distribution_sorts
 }
 
-array_lens = [2**x for x in range(11)]  # 1 - 1024
+array_lens = [2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 16, 24, 32, 48, 64, 96, 128, 192, 
+              256, 384, 512, 768, 1024, 1536, 2048, 3072, 4096, 6144, 8192]
 
 result_path = Path("./results")
 result_path.mkdir(exist_ok=True)
