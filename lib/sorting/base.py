@@ -7,8 +7,8 @@ from collections.abc import Callable, Sequence, MutableSequence
 
 
 class Sort:
-    def __init__(self, it: int = 1000,
-                 repeats: int = 1,
+    def __init__(self, it: int = 10,
+                 repeats: int = 5,
                  max_time: int | None = None,
                  random_state=None) -> None:
         self.it = it

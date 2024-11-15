@@ -1,5 +1,6 @@
 from .base import Sort
 from collections.abc import MutableSequence
+from math import log2, floor
 
 
 class SelectionSort(Sort):
@@ -412,7 +413,52 @@ class SmoothSort(Sort):
 
 
 class PoplarSort(Sort):
-    pass
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def _get_size(self, n):
+        return 2 ** (floor(log2(n+1))) - 1
+    
+    def _sift_down(self, array, base, root, end):
+        while True:
+            child = base + 2 * (root - base) + 1
+
+            if child >= end:
+                break
+            
+            if child + 1 < end and array[child] < array[child + 1]:
+                child += 1
+
+            if array[root] < array[child]:
+                array[root], array[child] = array[child], array[root]
+                root = child
+            else:
+                break
+    
+    def _build_poplar(self, array, start, size):
+        for i in range(start + (size - 2) // 2, start - 1, -1):
+            self._sift_down(array, start, i, start + size)
+    
+    def sort(self, arr):
+        n = len(arr)
+        head = 0
+
+        while head < n:
+            s = self._get_size(n - head)
+
+            self._build_poplar(arr, head, s)
+            head += s
+
+        while head > 0:
+            s = self._get_size()
+            head -= 1
+            arr[0], arr[head] = arr[head], arr[0]
+            self._sift_down(arr, 0, head)
+
+        return arr
+
+    
+    
 
 
 class TournamentSort(Sort):
