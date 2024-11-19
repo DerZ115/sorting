@@ -27,7 +27,7 @@ for type_dir in result_path.iterdir():
         data["sort_type"].append(np.full((len(n)), sort_type))
         data["sort_name"].append(np.full((len(n)), sort_name))
         
-data = {key: np.concat(val) for key, val in data.items()}
+data = {key: np.concatenate(val) for key, val in data.items()}
 
 data = pd.DataFrame(data)
 data['time_mean'] = data['time_mean'] / 10**9

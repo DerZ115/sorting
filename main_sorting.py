@@ -85,18 +85,17 @@ for name, category in all_sorts.items():
     for sorter in category:
         print(sorter.__class__.__name__)
 
-        results = np.zeros((len(array_lens), sort_args["repeats"]))
+        results = np.full((len(array_lens), sort_args["repeats"]), None, float)
         timed_out = False
 
         for i, n in enumerate(array_lens):
             print(f"N = {n}")
             arr = list(range(n))
             if timed_out:
-                results[i, :] = None
-                continue
+                break
 
             result = sorter.timed_sort(arr)
-            if all([r is None for r in result]):
+            if any([r is None for r in result]):
                 timed_out = True
 
             results[i, :] = result
